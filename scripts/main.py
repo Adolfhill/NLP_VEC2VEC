@@ -120,9 +120,8 @@ if __name__ == '__main__':
     plot_loss_total = 0 # Reset every plot_every
 
     # Begin!
-    #for epoch in range(1, config.n_epochs + 1):
-    for epoch in range(1, 2):
-        
+    for epoch in range(1, config.n_epochs + 1):
+    #for epoch in range(1, 2):
         # Get training data for this cycle
         training_pair = dataReader.variables_from_pair(random.choice(pairs),input_lang,output_lang)
         input_variable = training_pair[0]

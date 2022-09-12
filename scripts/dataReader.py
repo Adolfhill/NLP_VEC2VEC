@@ -13,13 +13,16 @@ class Lang:
         self.n_words = 2 # Count SOS and EOS
       
     def index_words(self, sentence):
-        if self.name == 'cn':    
+        if self.name == 'cn':  
+            #regist each chinese char  
             for word in sentence:
                 self.index_word(word)
         else:
+            #regist each english word
             for word in sentence.split(' '):
                 self.index_word(word)
 
+    #regist index for word
     def index_word(self, word):
         if word not in self.word2index:
             self.word2index[word] = self.n_words
@@ -52,6 +55,10 @@ def read_langs(lang1, lang2, reverse=False):
     # Split every line into pairs and normalize
     pairs = [[normalize_string(s) for s in l.split('\t')] for l in lines]
     
+    #print(pairs[0])
+    #['我們試試看 ', 'let s try something .']
+    #exit(0)
+    
     # Reverse pairs, make Lang instances
     if reverse:
         pairs = [list(reversed(p)) for p in pairs]
@@ -60,7 +67,8 @@ def read_langs(lang1, lang2, reverse=False):
     else:
         input_lang = Lang(lang1)
         output_lang = Lang(lang2)
-        
+    
+    #the lang is only setted name
     return input_lang, output_lang, pairs
 
 
@@ -74,6 +82,7 @@ def prepare_data(lang1_name, lang2_name, reverse=False):
     input_lang, output_lang, pairs = read_langs(lang1_name, lang2_name, reverse)
     print("Read %s sentence pairs" % len(pairs))
     
+    #过滤掉英文长度大于等于config.MAX_LENGTH的
     pairs = filter_pairs(pairs)
     print("Trimmed to %s sentence pairs" % len(pairs))
     
@@ -92,6 +101,7 @@ def indexes_from_sentence(lang, sentence):
     else:
         return [lang.word2index[word] for word in sentence.split(' ')]
 
+#transe sentence to indexarray
 def variable_from_sentence(lang, sentence, USE_CUDA = True):
     indexes = indexes_from_sentence(lang, sentence)
     indexes.append(config.EOS_token)
