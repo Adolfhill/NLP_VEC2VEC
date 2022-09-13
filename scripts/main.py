@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 
-import encoderRNN
-import decoderRNN
+import encoderGRU
+import decoderGRU
 import dataReader
 import evaluate
 import config
@@ -100,8 +100,8 @@ if __name__ == '__main__':
     print(random.choice(pairs))
 
     # Initialize models
-    encoder = encoderRNN.EncoderRNN(input_lang.n_words, config.hidden_size, config.n_layers,config.USE_CUDA )
-    decoder = decoderRNN.DecoderRNN(config.hidden_size, output_lang.n_words, config.n_layers, dropout_p=config.dropout_p)
+    encoder = encoderGRU.EncoderGRU(input_lang.n_words, config.hidden_size, config.n_layers,config.USE_CUDA )
+    decoder = decoderGRU.DecoderGRU(config.hidden_size, output_lang.n_words, config.n_layers, dropout_p=config.dropout_p)
 
     
 
@@ -120,7 +120,11 @@ if __name__ == '__main__':
     plot_loss_total = 0 # Reset every plot_every
 
     # Begin!
-    for epoch in range(1, config.n_epochs + 1):
+    if not config.test:
+        train_times = config.n_epochs + 1
+    else:
+        train_times = 2
+    for epoch in range(1, train_times):
     #for epoch in range(1, 2):
         # Get training data for this cycle
         training_pair = dataReader.variables_from_pair(random.choice(pairs),input_lang,output_lang)
@@ -150,4 +154,5 @@ if __name__ == '__main__':
 
     show_plot(plot_losses)
     evaluateModule = evaluate.Evaluate(config.USE_CUDA)
-    evaluateModule.evaluate_randomly(pairs, encoder, decoder, input_lang, output_lang, max_length=config.MAX_LENGTH)
+    for i in range(10):
+        evaluateModule.evaluate_randomly(pairs, encoder, decoder, input_lang, output_lang, max_length=config.MAX_LENGTH)

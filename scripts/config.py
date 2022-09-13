@@ -16,3 +16,5 @@ MAX_LENGTH = 10
 SOS_token = 0
 #End of sentence
 EOS_token = 1
+
+test = False
