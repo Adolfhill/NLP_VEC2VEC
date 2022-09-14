@@ -153,6 +153,11 @@ if __name__ == '__main__':
 
 
     show_plot(plot_losses)
-    evaluateModule = evaluate.Evaluate(config.USE_CUDA)
-    for i in range(10):
-        evaluateModule.evaluate_randomly(pairs, encoder, decoder, input_lang, output_lang, max_length=config.MAX_LENGTH)
+    
+    
+    evaluator = evaluate.Evaluate(pairs, config.USE_CUDA)
+    if config.evaluate_mod == "bleu":
+        evaluator.bleuEvaluate(encoder,decoder,input_lang,output_lang,weights=config.bleu_weight, numOfSentence=config.numOfSentence)
+    elif config.evaluate_mod == "randomly":
+        for i in range(10):
+            evaluator.evaluate_randomly(encoder, decoder, input_lang, output_lang, max_length=config.MAX_LENGTH)

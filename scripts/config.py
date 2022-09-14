@@ -19,4 +19,9 @@ SOS_token = 0
 #End of sentence
 EOS_token = 1
 
-test = True
+test = False
+
+#bleu
+evaluate_mod = "bleu"
+bleu_weight = (1,0,0,0)
+numOfSentence = 10
