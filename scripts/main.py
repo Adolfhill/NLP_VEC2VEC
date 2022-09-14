@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 
-import encoderGRU
-import decoderGRU
+import encoder
+import decoder
 import dataReader
 import evaluate
 import config
@@ -100,8 +100,8 @@ if __name__ == '__main__':
     print(random.choice(pairs))
 
     # Initialize models
-    encoder = encoderGRU.EncoderGRU(input_lang.n_words, config.hidden_size, config.n_layers,config.USE_CUDA )
-    decoder = decoderGRU.DecoderGRU(config.hidden_size, output_lang.n_words, config.n_layers, dropout_p=config.dropout_p)
+    encoder = encoder.Encoder(input_lang.n_words, config.hidden_size, config.n_layers,config.USE_CUDA, config.module)
+    decoder = decoder.Decoder(config.hidden_size, output_lang.n_words, config.n_layers, dropout_p=config.dropout_p, module=config.module)
 
     
 
