@@ -1,5 +1,5 @@
 USE_CUDA = True
-teacher_forcing_ratio = 0.5
+teacher_forcing_ratio = 1.0
 clip = 5.0
 learning_rate = 0.0001
 hidden_size = 500

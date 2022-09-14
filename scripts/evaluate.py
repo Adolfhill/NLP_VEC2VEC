@@ -3,10 +3,12 @@ import dataReader
 import random
 import torch
 
+import log
 
 class Evaluate():
     def __init__(self, __USE_CUDA=True):
         self.__USE_CUDA = __USE_CUDA
+        self.__logger = log.getLogger("./log.INFO")
 
 
     def __evaluate(self, sentence, encoder, decoder, input_lang, output_lang, max_length=config.MAX_LENGTH):
@@ -52,9 +54,6 @@ class Evaluate():
         output_words = self.__evaluate(pair[0], encoder, decoder, input_lang, output_lang, max_length)
         output_sentence = ' '.join(output_words)
         
-        print('>', pair[0])
-        print('=', pair[1])
-        print('<', output_sentence)
-        print('')
+        self.__logger.info("\n -------------------------------------\n {} \n {} \n {} \n ------------------------------------- \n".format(pair[0],pair[1],output_sentence))
 
         
