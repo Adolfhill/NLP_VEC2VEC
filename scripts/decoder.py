@@ -22,7 +22,10 @@ class Decoder(nn.Module):
             self.__module = nn.GRU(self.__hidden_size, self.__hidden_size, self.__n_layers, dropout=self.__dropout_p)
         elif self.__moduleType == "RNN":
             self.__module = nn.RNN(self.__hidden_size, self.__hidden_size, self.__n_layers, dropout=self.__dropout_p)
-
+        elif self.__moduleType == "LSTM":
+            self.__module = nn.LSTM(self.__hidden_size, self.__hidden_size, self.__n_layers, dropout=self.__dropout_p)
+        else:
+            raise("no match module {}".format(self.__moduleType))
         
         self.__USE_CUDA = USE_CUDA
         # Move models to GPU

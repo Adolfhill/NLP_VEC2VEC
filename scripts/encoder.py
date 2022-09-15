@@ -16,6 +16,8 @@ class Encoder(nn.Module):
             self.__module = nn.RNN(self.__hidden_size, hidden_size, self.__n_layers)
         elif self.__moduleType == "GRU":
             self.__module = nn.GRU(self.__hidden_size, self.__hidden_size, self.__n_layers)
+        elif self.__moduleType == "LSTM":
+            self.__module = nn.LSTM(self.__hidden_size, self.__hidden_size, self.__n_layers)
         else:
             raise("no match module {}".format(self.__moduleType))
 
@@ -33,8 +35,16 @@ class Encoder(nn.Module):
         return output, hidden
 
     def init_hidden(self):
-        hidden = torch.zeros(self.__n_layers, 1, self.__hidden_size)
-        if self.__USE_CUDA: hidden = hidden.cuda()
+        if self.__moduleType == "LSTM":
+            if self.__USE_CUDA:
+                hidden = (torch.zeros(self.__n_layers, 1, self.__hidden_size).cuda(),
+                          torch.zeros(self.__n_layers, 1, self.__hidden_size).cuda())
+            else:
+                hidden = (torch.zeros(self.__n_layers, 1, self.__hidden_size),
+                          torch.zeros(self.__n_layers, 1, self.__hidden_size))
+        else:
+            hidden = torch.zeros(self.__n_layers, 1, self.__hidden_size)
+            if self.__USE_CUDA: hidden = hidden.cuda()
         return hidden
 
     
