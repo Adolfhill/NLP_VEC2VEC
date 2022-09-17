@@ -20,7 +20,7 @@ EOS_token = 1
 
 
 module = "GRU"
-test = False
+test = True
 bidirectional = True
 
 #bleu
