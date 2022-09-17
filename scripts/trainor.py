@@ -52,7 +52,7 @@ class Trainor():
             if epoch % self.__config.print_every == 0:
                 print_loss_avg = self.__print_loss_total / self.__config.print_every
                 self.__print_loss_total = 0
-                print_summary = '%s (%d %d%%) %.4f' % (self.time_since(self.__start, epoch / self.__config.n_epochs), epoch, epoch / config.n_epochs * 100, print_loss_avg)
+                print_summary = '%s (%d %d%%) %.4f' % (self.time_since(self.__start, epoch / self.__config.n_epochs), epoch, epoch / self.__config.n_epochs * 100, print_loss_avg)
                 print(print_summary)
 
             if epoch % self.__config.plot_every == 0:
