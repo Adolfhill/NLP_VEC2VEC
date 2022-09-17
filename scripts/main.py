@@ -61,7 +61,11 @@ if __name__ == '__main__':
     config = config.Config()
     dataReader = dataReader.DataReader(config)    
     mainLogger = log.getLogger("../logs/logInAll.INFO", 114514)
-    
-    a = runOneTime(config, dataReader, 0)
-    mainLogger.info("teacher_forcing_ratio : {} , score : {}".format(config.teacher_forcing_ratio , a))
-    
+    saver = []
+    config.teacher_forcing_ratio = 0
+    for i in range(20):
+        a = runOneTime(config, dataReader, i)
+        mainLogger.info("teacher_forcing_ratio : {} , score : {}".format(config.teacher_forcing_ratio , a))
+        saver.append([config.teacher_forcing_ratio, a])
+        config.teacher_forcing_ratio = config.teacher_forcing_ratio + 0.05
+    mainLogger.info("total: \n {}".format(saver))

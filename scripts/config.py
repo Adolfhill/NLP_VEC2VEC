@@ -24,7 +24,7 @@ class Config:
     numOfTrainData = 0.9
 
     module = "GRU"
-    test = True
+    test = False
     bidirectional = True
 
     #bleu
