@@ -38,11 +38,11 @@ class Encoder(nn.Module):
     def init_hidden(self):
         if self.__moduleType == "LSTM":
             if self.__USE_CUDA:
-                hidden = (torch.zeros(self.__n_layers, 1, self.__hidden_size).cuda(),
-                          torch.zeros(self.__n_layers, 1, self.__hidden_size).cuda())
+                hidden = (torch.zeros(self.__n_layers * (1 + self.__bidirectional), 1, self.__hidden_size).cuda(),
+                          torch.zeros(self.__n_layers * (1 + self.__bidirectional), 1, self.__hidden_size).cuda())
             else:
-                hidden = (torch.zeros(self.__n_layers, 1, self.__hidden_size),
-                          torch.zeros(self.__n_layers, 1, self.__hidden_size))
+                hidden = (torch.zeros(self.__n_layers * (1 + self.__bidirectional), 1, self.__hidden_size),
+                          torch.zeros(self.__n_layers * (1 + self.__bidirectional), 1, self.__hidden_size))
         else:
             hidden = torch.zeros(self.__n_layers * (1 + self.__bidirectional), 1, self.__hidden_size)
             if self.__USE_CUDA: hidden = hidden.cuda()

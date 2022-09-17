@@ -21,9 +21,9 @@ class Decoder(nn.Module):
         if self.__moduleType == "GRU":
             self.__module = nn.GRU(self.__hidden_size, self.__hidden_size, self.__n_layers  * (1 + self.__bidirectional), dropout=self.__dropout_p)
         elif self.__moduleType == "RNN":
-            self.__module = nn.RNN(self.__hidden_size, self.__hidden_size, self.__n_layers, dropout=self.__dropout_p)
+            self.__module = nn.RNN(self.__hidden_size, self.__hidden_size, self.__n_layers * (1 + self.__bidirectional), dropout=self.__dropout_p)
         elif self.__moduleType == "LSTM":
-            self.__module = nn.LSTM(self.__hidden_size, self.__hidden_size, self.__n_layers, dropout=self.__dropout_p)
+            self.__module = nn.LSTM(self.__hidden_size, self.__hidden_size, self.__n_layers * (1 + self.__bidirectional), dropout=self.__dropout_p)
         else:
             raise("no match module {}".format(self.__moduleType))
         

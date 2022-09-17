@@ -19,11 +19,11 @@ SOS_token = 0
 EOS_token = 1
 
 
-module = "GRU"
+module = "LSTM"
 test = True
 bidirectional = True
 
 #bleu
 evaluate_mod = "bleu"
-bleu_weight = (1,0,0,0)
+bleu_weight = (1,0)
 numOfSentence = 10
