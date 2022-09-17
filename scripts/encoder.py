@@ -3,14 +3,15 @@ import torch
 
 
 class Encoder(nn.Module):
-    def __init__(self, input_size, hidden_size, n_layers=1, USE_CUDA = True, module = "GRU", bidirectional = True):
+    def __init__(self, input_size, config):
         super(Encoder, self).__init__()
         
+        self.__config = config
         self.__input_size = input_size
-        self.__hidden_size = hidden_size
-        self.__n_layers = n_layers
-        self.__moduleType = module
-        self.__bidirectional = bidirectional
+        self.__hidden_size = self.__config.hidden_size
+        self.__n_layers = self.__config.n_layers
+        self.__moduleType = self.__config.module
+        self.__bidirectional = self.__config.bidirectional
         
         self.__embedding = nn.Embedding(self.__input_size, self.__hidden_size)
         if self.__moduleType == "RNN":
@@ -23,7 +24,7 @@ class Encoder(nn.Module):
             raise("no match module {}".format(self.__moduleType))
 
         
-        self.__USE_CUDA = USE_CUDA
+        self.__USE_CUDA = self.__config.USE_CUDA
         # Move models to GPU
         if self.__USE_CUDA:
             self.cuda()

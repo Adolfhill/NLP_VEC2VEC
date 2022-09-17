@@ -1,18 +1,18 @@
 import torch.nn as nn
 import torch.nn.functional as F
 
-
 class Decoder(nn.Module):
-    def __init__(self, hidden_size, output_size, n_layers=1, dropout_p=0.1, USE_CUDA = True, module="GRU", bidirectional = True):
+    def __init__(self, output_size, config):
         super(Decoder, self).__init__()
         
         # Keep parameters for reference
-        self.__hidden_size = hidden_size
+        self.__config = config
+        self.__hidden_size = self.__config.hidden_size
         self.__output_size = output_size
-        self.__n_layers = n_layers
-        self.__dropout_p = dropout_p
-        self.__moduleType = module
-        self.__bidirectional = bidirectional
+        self.__n_layers = self.__config.n_layers
+        self.__dropout_p = self.__config.dropout_p
+        self.__moduleType = self.__config.module
+        self.__bidirectional = self.__config.bidirectional
         
         # Define layers
         self.embedding = nn.Embedding(self.__output_size, self.__hidden_size)
@@ -27,7 +27,7 @@ class Decoder(nn.Module):
         else:
             raise("no match module {}".format(self.__moduleType))
         
-        self.__USE_CUDA = USE_CUDA
+        self.__USE_CUDA = self.__config.USE_CUDA
         # Move models to GPU
         if self.__USE_CUDA:
             self.cuda()

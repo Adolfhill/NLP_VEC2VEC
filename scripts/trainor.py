@@ -4,11 +4,12 @@ import math
 import time
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-import dataReader
 import config
 
 class Trainor():
-    def __init__(self, pairs, input_lang, output_lang, encoder, decoder, encoder_optimizer, decoder_optimizer, criterion, max_length=config.MAX_LENGTH) -> None:
+    def __init__(self, pairs, input_lang, output_lang, encoder, decoder, encoder_optimizer, decoder_optimizer, criterion, config, dataReader) -> None:
+        self.__dataReader = dataReader
+        self.__config = config
         self.__pairs = pairs
         self.__input_lang = input_lang
         self.__output_lang = output_lang
@@ -17,7 +18,7 @@ class Trainor():
         self.__encoder_optimizer = encoder_optimizer
         self.__decoder_optimizer = decoder_optimizer
         self.__criterion = criterion
-        self.__max_length = max_length
+        self.__max_length = self.__config.MAX_LENGTH
         
         
         # Keep track of time elapsed and running averages
@@ -29,14 +30,13 @@ class Trainor():
 
     def train(self):
         # Begin!
-        if not config.test:
-            train_times = config.n_epochs + 1
+        if not self.__config.test:
+            train_times = self.__config.n_epochs + 1
         else:
             train_times = 2
         for epoch in range(1, train_times):
-        #for epoch in range(1, 2):
             # Get training data for this cycle
-            training_pair = dataReader.variables_from_pair(random.choice(self.__pairs),self.__input_lang,self.__output_lang)
+            training_pair = self.__dataReader.variables_from_pair(random.choice(self.__pairs),self.__input_lang,self.__output_lang)
             self.__input_variable = training_pair[0]
             self.__target_variable = training_pair[1]
 
@@ -49,14 +49,14 @@ class Trainor():
 
             if epoch == 0: continue
 
-            if epoch % config.print_every == 0:
-                print_loss_avg = self.__print_loss_total / config.print_every
+            if epoch % self.__config.print_every == 0:
+                print_loss_avg = self.__print_loss_total / self.__config.print_every
                 self.__print_loss_total = 0
-                print_summary = '%s (%d %d%%) %.4f' % (self.time_since(self.__start, epoch / config.n_epochs), epoch, epoch / config.n_epochs * 100, print_loss_avg)
+                print_summary = '%s (%d %d%%) %.4f' % (self.time_since(self.__start, epoch / self.__config.n_epochs), epoch, epoch / config.n_epochs * 100, print_loss_avg)
                 print(print_summary)
 
-            if epoch % config.plot_every == 0:
-                plot_loss_avg = self.__plot_loss_total / config.plot_every
+            if epoch % self.__config.plot_every == 0:
+                plot_loss_avg = self.__plot_loss_total /self.__config.plot_every
                 self.__plot_losses.append(plot_loss_avg)
                 self.__plot_loss_total = 0
 
@@ -77,13 +77,13 @@ class Trainor():
         encoder_outputs, encoder_hidden = self.__encoder(self.__input_variable, encoder_hidden)
         
         # Prepare input and output variables
-        decoder_input = torch.LongTensor([[config.SOS_token]])
+        decoder_input = torch.LongTensor([[self.__config.SOS_token]])
         decoder_hidden = encoder_hidden # Use last hidden state from encoder to start decoder
-        if config.USE_CUDA:
+        if self.__config.USE_CUDA:
             decoder_input = decoder_input.cuda()
 
         # Choose whether to use teacher forcing
-        use_teacher_forcing = random.random() < config.teacher_forcing_ratio
+        use_teacher_forcing = random.random() < self.__config.teacher_forcing_ratio
         if use_teacher_forcing:
             
             # Teacher forcing: Use the ground-truth target as the next input
@@ -103,15 +103,15 @@ class Trainor():
                 ni = topi[0][0]
                 
                 decoder_input = torch.LongTensor([[ni]]) # Chosen word is next input
-                if config.USE_CUDA: decoder_input = decoder_input.cuda()
+                if self.__config.USE_CUDA: decoder_input = decoder_input.cuda()
 
                 # Stop at end of sentence (not necessary when using known targets)
-                if ni == config.EOS_token: break
+                if ni == self.__config.EOS_token: break
 
         # Backpropagation
         loss.backward()
-        torch.nn.utils.clip_grad_norm(self.__encoder.parameters(), config.clip)
-        torch.nn.utils.clip_grad_norm(self.__decoder.parameters(), config.clip)
+        torch.nn.utils.clip_grad_norm(self.__encoder.parameters(), self.__config.clip)
+        torch.nn.utils.clip_grad_norm(self.__decoder.parameters(), self.__config.clip)
         self.__encoder_optimizer.step()
         self.__decoder_optimizer.step()
         

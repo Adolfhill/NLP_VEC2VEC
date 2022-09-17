@@ -12,39 +12,59 @@ import dataReader
 import evaluate
 import config
 import trainor
+import log
 
-if __name__ == '__main__':
+def runOneTime(config, dataReader, index):
     input_lang, output_lang, pairs = dataReader.prepare_data('cn', 'eng', False)
-    # Print an example pair
-    #print(random.choice(pairs))
-
-    # Initialize models
-    encoder = encoder.Encoder(input_lang.n_words, config.hidden_size, config.n_layers,config.USE_CUDA, config.module)
-    decoder = decoder.Decoder(config.hidden_size, output_lang.n_words, config.n_layers, dropout_p=config.dropout_p, module=config.module)
-
     
+    # Initialize models
+    MyEncoder = encoder.Encoder(input_lang.n_words, config)
+    MyDecoder = decoder.Decoder(output_lang.n_words, config)
+
+    pairs_to_train = []
+    pairs_to_evaluate = []
+    
+    for pair in pairs:
+        if random.random() < config.numOfTrainData:
+            pairs_to_train.append(pair)
+        else:
+            pairs_to_evaluate.append(pair)
+
 
 
     # Initialize optimizers and criterion
-    encoder_optimizer = optim.Adam(encoder.parameters(), lr=config.learning_rate)
-    decoder_optimizer = optim.Adam(decoder.parameters(), lr=config.learning_rate)
+    encoder_optimizer = optim.Adam(MyEncoder.parameters(), lr=config.learning_rate)
+    decoder_optimizer = optim.Adam(MyDecoder.parameters(), lr=config.learning_rate)
     criterion = nn.NLLLoss()
 
 
 
 
 
-    trainor = trainor.Trainor(pairs, input_lang, output_lang, encoder, decoder, encoder_optimizer, decoder_optimizer, criterion)
+    Mytrainor = trainor.Trainor(pairs_to_train, input_lang, output_lang, MyEncoder, MyDecoder, encoder_optimizer, decoder_optimizer, criterion, config, dataReader)
 
-    trainor.train()
+    Mytrainor.train()
 
 
-    trainor.show_plot()
+    Mytrainor.show_plot()
     
     
-    evaluator = evaluate.Evaluate(pairs, config.USE_CUDA)
+    evaluator = evaluate.Evaluate(pairs_to_evaluate, config, dataReader, index)
     if config.evaluate_mod == "bleu":
-        evaluator.bleuEvaluate(trainor.get_encoder(),trainor.get_decoder(),input_lang,output_lang,weights=config.bleu_weight, numOfSentence=config.numOfSentence)
+        return evaluator.bleuEvaluate(Mytrainor.get_encoder(),Mytrainor.get_decoder(),input_lang,output_lang,weights=config.bleu_weight)
     elif config.evaluate_mod == "randomly":
         for i in range(10):
-            evaluator.evaluate_randomly(trainor.get_encoder(),trainor.get_decoder(), input_lang, output_lang, max_length=config.MAX_LENGTH)
+            evaluator.evaluate_randomly(Mytrainor.get_encoder(),Mytrainor.get_decoder(), input_lang, output_lang, max_length=config.MAX_LENGTH)
+        return -1
+    
+if __name__ == '__main__':
+    config = config.Config()
+    dataReader = dataReader.DataReader(config)    
+    
+    a = runOneTime(config, dataReader, 0)
+    
+    mainLogger = log.getLogger("../logs/logInAll.INFO")
+    
+    mainLogger.info(a)
+    
+
