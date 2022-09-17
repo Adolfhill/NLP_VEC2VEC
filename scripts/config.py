@@ -20,7 +20,8 @@ EOS_token = 1
 
 
 module = "LSTM"
-test = False
+test = True
+bidirectional = True
 
 #bleu
 evaluate_mod = "bleu"
