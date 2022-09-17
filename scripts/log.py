@@ -2,9 +2,9 @@ import logging
 
 
 # init and get a logger
-def getLogger(filePath):
+def getLogger(filePath, index):
     # set log
-    logger = logging.getLogger(name='logs')  # 不加名称设置root logger
+    logger = logging.getLogger(name='logs{}'.format(index))  # 不加名称设置root logger
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
 

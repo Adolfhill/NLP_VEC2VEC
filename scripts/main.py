@@ -60,11 +60,8 @@ def runOneTime(config, dataReader, index):
 if __name__ == '__main__':
     config = config.Config()
     dataReader = dataReader.DataReader(config)    
+    mainLogger = log.getLogger("../logs/logInAll.INFO", 114514)
     
     a = runOneTime(config, dataReader, 0)
+    mainLogger.info("teacher_forcing_ratio : {} , score : {}".format(config.teacher_forcing_ratio , a))
     
-    mainLogger = log.getLogger("../logs/logInAll.INFO")
-    
-    mainLogger.info(a)
-    
-

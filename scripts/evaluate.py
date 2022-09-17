@@ -1,3 +1,4 @@
+from cgi import test
 import random
 import torch
 import bleu
@@ -10,7 +11,7 @@ class Evaluate():
         self.__dataReader = dataReader
         self.__config = config
         self.__USE_CUDA = self.__config.USE_CUDA
-        self.__logger = log.getLogger("../logs/log{}.INFO".format(self.__index))
+        self.__logger = log.getLogger("../logs/log{}.INFO".format(self.__index), self.__index)
         self.__bleu = bleu.Bleu()
         self.__pairs = pairs
 
@@ -111,6 +112,8 @@ class Evaluate():
             if counter % 1000 == 0 and self.__config.logsDetiled:
                 self.__logger.info("\n -------------------------------------\n {} \n {} \n {} \n ------------------------------------- \n".format(pair[0],pair[1],output_sentence))
             counter = counter + 1
+            if self.__config.test and counter == 2:
+                break
         
         if self.__config.logsDetiled: 
             self.__logger.info("\n hypotheses[0]: {} \n references[0]: {} \n ".format(hypotheses[0], references[0]))

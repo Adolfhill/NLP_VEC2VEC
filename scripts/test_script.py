@@ -1,6 +1,5 @@
 
-lst = [1,2,3,4]
+import t2
 
-for num in lst:
-    num = num * 2
-print(lst)
+for i in range(10):
+    t2.addAndPrintI()

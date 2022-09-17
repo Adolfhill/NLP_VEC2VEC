@@ -30,7 +30,6 @@ class Config:
     #bleu
     evaluate_mod = "bleu"
     bleu_weight = (1,0)
-    numOfSentence = 10
     
     #logs
     logsDetiled = True
