@@ -19,7 +19,7 @@ SOS_token = 0
 EOS_token = 1
 
 
-module = "LSTM"
+module = "GRU"
 test = True
 bidirectional = True
 

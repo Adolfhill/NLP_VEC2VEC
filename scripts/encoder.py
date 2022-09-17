@@ -14,7 +14,7 @@ class Encoder(nn.Module):
         
         self.__embedding = nn.Embedding(self.__input_size, self.__hidden_size)
         if self.__moduleType == "RNN":
-            self.__module = nn.RNN(self.__hidden_size, hidden_size, self.__n_layers, bidirectional = self.__bidirectional)
+            self.__module = nn.RNN(self.__hidden_size, self.__hidden_size, self.__n_layers, bidirectional = self.__bidirectional)
         elif self.__moduleType == "GRU":
             self.__module = nn.GRU(self.__hidden_size, self.__hidden_size, self.__n_layers, bidirectional = self.__bidirectional)
         elif self.__moduleType == "LSTM":
