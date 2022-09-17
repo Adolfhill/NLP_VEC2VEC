@@ -46,7 +46,7 @@ def runOneTime(config, dataReader, index):
     Mytrainor.train()
 
 
-    Mytrainor.show_plot()
+    #Mytrainor.show_plot()
     
     
     evaluator = evaluate.Evaluate(pairs_to_evaluate, config, dataReader, index)
