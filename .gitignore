@@ -1,2 +1,4 @@
 *__pycache__*
 *.INFO
+logs/
+scripts/test_script.py
