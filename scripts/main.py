@@ -61,6 +61,5 @@ if __name__ == '__main__':
     dataReader = dataReader.DataReader(config)    
     mainLogger = log.getLogger("../logs/logInAll.INFO", 114514)
     
-    a = runOneTime(config, dataReader, 0)
-    mainLogger.info("teacher_forcing_ratio : {} , score : {}".format(config.teacher_forcing_ratio , a))
+    runOneTime(config, dataReader, 0)
     
