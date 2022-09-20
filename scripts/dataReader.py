@@ -81,7 +81,8 @@ class DataReader():
     def filter_pairs(self, pairs):
         return [pair for pair in pairs if self.filter_pair(pair)]
 
-    def prepare_data(self, lang1_name, lang2_name, reverse=False):
+    #input_lang : cn
+    def prepare_data(self, lang1_name, lang2_name, chinese_file_path, reverse=False):
         input_lang, output_lang, pairs = self.read_langs(lang1_name, lang2_name, reverse)
         print("Read %s sentence pairs" % len(pairs))
         
@@ -93,6 +94,20 @@ class DataReader():
         for pair in pairs:
             input_lang.index_words(pair[0])
             output_lang.index_words(pair[1])
+        print("done 1")
+        
+        
+        print("opening {} ...".format(chinese_file_path))
+        lines = open(chinese_file_path, encoding='utf-8').read().strip().split('\n')
+        print("open {} down!".format(chinese_file_path))
+        counter = 0
+        for line in lines:
+            if counter % 1000 == 0:
+                print("translating... {}".format(counter))
+            string = self.normalize_string(line)
+            input_lang.index_words(string)
+            counter = counter + 1
+            
 
         return input_lang, output_lang, pairs
 

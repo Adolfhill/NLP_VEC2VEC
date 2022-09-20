@@ -11,11 +11,12 @@ import decoder
 import dataReader
 import evaluate
 import config
+import translator
 import trainor
 import log
 
 def runOneTime(config, dataReader, index):
-    input_lang, output_lang, pairs = dataReader.prepare_data('cn', 'eng', False)
+    input_lang, output_lang, pairs = dataReader.prepare_data('cn', 'eng', "../test.txt")
     
     # Initialize models
     MyEncoder = encoder.Encoder(input_lang.n_words, config)
@@ -47,15 +48,13 @@ def runOneTime(config, dataReader, index):
 
 
     #Mytrainor.show_plot()
+    #dataReader, config, english_lang, chinese_file_path, encoder, decoder
+    myTranslator = translator.Translator(dataReader, config, output_lang, input_lang, "../test.txt", MyEncoder, MyDecoder)
+    ansList = myTranslator.getDecodeWords()
     
-    
-    evaluator = evaluate.Evaluate(pairs_to_evaluate, config, dataReader, index)
-    if config.evaluate_mod == "bleu":
-        return evaluator.bleuEvaluate(Mytrainor.get_encoder(),Mytrainor.get_decoder(),input_lang,output_lang,weights=config.bleu_weight)
-    elif config.evaluate_mod == "randomly":
-        for i in range(10):
-            evaluator.evaluate_randomly(Mytrainor.get_encoder(),Mytrainor.get_decoder(), input_lang, output_lang, max_length=config.MAX_LENGTH)
-        return -1
+    print(ansList)
+    with open("../ans.txt",'w') as file:
+        file.writelines('\n'.join(ansList))
     
 if __name__ == '__main__':
     config = config.Config()

@@ -2,7 +2,7 @@ class Config:
     def __init__(self) -> None:
         pass
     USE_CUDA = True
-    teacher_forcing_ratio = 0.5
+    teacher_forcing_ratio = 0.2
     clip = 5.0
     learning_rate = 0.0001
     hidden_size = 500
@@ -23,8 +23,8 @@ class Config:
 
     numOfTrainData = 0.9
 
-    module = "GRU"
-    test = True
+    module = "LSTM"
+    test = False
     bidirectional = True
 
     #bleu
